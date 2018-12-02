@@ -1,0 +1,26 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SendEmailNotifications:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SendEmailNotifications_jar</output-path>
+    <root id="archive" name="SendEmailNotifications.jar">
+      <element id="module-output" name="SendEmailNotifications" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/jaf-1.1.1/activation.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/commons-codec-1.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/commons-logging-1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/fluent-hc-4.5.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/httpasyncclient-4.0-beta4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/httpclient-4.5.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/httpclient-cache-4.5.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/httpclient-win-4.5.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/httpcore-4.4.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/httpcore-nio-4.4.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/httpmime-4.5.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/jna-4.4.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/jna-platform-4.4.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/httpcomponents-client-4.5.6/lib/json-20180813.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/javax.mail.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/javax/mail/javax.mail-api/1.6.2/javax.mail-api-1.6.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/mssql-jdbc-6.4.0.jre8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libraries/aws-lambda-java-core-1.2.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
