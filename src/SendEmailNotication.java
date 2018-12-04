@@ -44,7 +44,7 @@ public class SendEmailNotication implements RequestHandler<Object, Boolean> {
                 ArrayList<Map<Date, ArrayList<String>>> assignments = new ArrayList<>();
                 Map<Date, ArrayList<String>> assignment = new HashMap<>();
 
-                PreparedStatement psAssignments = dbCon.prepareStatement("SELECT Assignments.assignmentName, Assignments.assignmentDueDate, Classes.className, Assignments.userId FROM Assignments INNER JOIN Users ON Assignments.userId = Users.userId INNER JOIN Classes ON Assignments.classId = Classes.classId WHERE Users.userId=? AND (assignmentDueDate >= Convert(datetime, GETDATE()) AND assignmentDueDate <= Convert(datetime, DATEADD(day, 3, Convert(datetime, GETDATE())))) ORDER BY assignmentDueDate ASC");
+                PreparedStatement psAssignments = dbCon.prepareStatement("SELECT Assignments.assignmentName, Assignments.assignmentDueDate, Classes.className, Assignments.userId FROM Assignments INNER JOIN Users ON Assignments.userId = Users.userId INNER JOIN Classes ON Assignments.classId = Classes.classId WHERE Users.userId=? AND (assignmentDueDate >= Convert(date, GETDATE()) AND assignmentDueDate <= Convert(date, DATEADD(day, 3, Convert(date, GETDATE())))) ORDER BY assignmentDueDate ASC");
                 psAssignments.setInt(1, rs.getInt("userId"));
                 ResultSet assignmentsRs = psAssignments.executeQuery();
 
@@ -104,17 +104,19 @@ public class SendEmailNotication implements RequestHandler<Object, Boolean> {
                             InternetAddress.parse(emailAddress));
                     message.setSubject("GradeBook: Upcoming Assignments Reminder");
 
-                    int assignmentCount = assignments.get(emailAddress).get(0).keySet().size();
-                    messageText += "Hello,\n\nThank you for using the GradeBook. This is a friendly reminder that the following " + assignmentCount + " assignments will be due within the next three days: ";
-
+                    int assignmentCount = 0;
                     SortedSet<Date> keys = new TreeSet<Date>(assignments.get(emailAddress).get(0).keySet());
+                    String assignmentText = "";
                     for (Date assignmentDueDate : keys) {
-                        messageText += "\n\nDue on " + new SimpleDateFormat("MMMM dd, yyyy").format(assignmentDueDate) + ": ";
+                        assignmentText += "\n\nDue on " + new SimpleDateFormat("MMMM dd, yyyy").format(assignmentDueDate) + ": ";
                         for (int i = 0; i < assignments.get(emailAddress).get(0).get(assignmentDueDate).size(); i++) {
-                            messageText += "\n" + assignments.get(emailAddress).get(0).get(assignmentDueDate).get(i);
+                            assignmentText += "\n" + assignments.get(emailAddress).get(0).get(assignmentDueDate).get(i);
+                            assignmentCount += 1;
                         }
                     }
 
+                    messageText += "Hello,\n\nThank you for using the GradeBook. This is a friendly reminder that the following " + assignmentCount + " assignments will be due within the next three days: ";
+                    messageText += assignmentText;
                     messageText += "\n\nWishing you success on your assignments!\n\nThe GradeBook";
                     message.setText(messageText);
                     Transport.send(message);
