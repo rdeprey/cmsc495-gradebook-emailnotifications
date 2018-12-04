@@ -8,15 +8,14 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
-public class SendEmailNotication implements RequestHandler<Object, Boolean> {
+class SendEmailNotication implements RequestHandler<Object, Boolean> {
     @Override
     public Boolean handleRequest(Object input, Context context) {
         try {
             sendUpcomingAssignmentNotifications();
             return true;
         } catch (Exception ex) {
-            System.out.println("Failed");
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return false;
@@ -26,16 +25,14 @@ public class SendEmailNotication implements RequestHandler<Object, Boolean> {
         try {
             sendUpcomingAssignmentNotifications();
         } catch (Exception ex) {
-            System.out.println("Failed");
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 
-    public static Map<String, ArrayList<Map<Date, ArrayList<String>>>> getUpcomingAssignments() throws Exception {
+    private static Map<String, ArrayList<Map<Date, ArrayList<String>>>> getUpcomingAssignments() throws Exception {
         Map<String, ArrayList<Map<Date, ArrayList<String>>>> emailNotifications = new HashMap<>();
 
-        Connection dbCon = new DatabaseConnection().getConnection();
-        try {
+        try (Connection dbCon = new DatabaseConnection().getConnection()) {
             PreparedStatement ps = dbCon.prepareStatement("SELECT userId, emailAddress FROM Users");
             ResultSet rs = ps.executeQuery();
 
@@ -69,15 +66,13 @@ public class SendEmailNotication implements RequestHandler<Object, Boolean> {
             return emailNotifications;
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } finally {
-            dbCon.close();
         }
 
         return null;
     }
 
     // Send an email notification for any assignments due in three days or less
-    public static void sendUpcomingAssignmentNotifications() {
+    private static void sendUpcomingAssignmentNotifications() {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");
@@ -96,7 +91,7 @@ public class SendEmailNotication implements RequestHandler<Object, Boolean> {
         try {
             Message message = new MimeMessage(session);
             Map<String, ArrayList<Map<Date, ArrayList<String>>>> assignments = getUpcomingAssignments();
-            for (String emailAddress : assignments.keySet()) {
+            for (String emailAddress : Objects.requireNonNull(assignments).keySet()) {
                 if (assignments.get(emailAddress).size() > 0) {
                     String messageText = "";
                     message.setFrom(new InternetAddress("cmsc495gradebook@gmail.com"));
@@ -105,12 +100,12 @@ public class SendEmailNotication implements RequestHandler<Object, Boolean> {
                     message.setSubject("GradeBook: Upcoming Assignments Reminder");
 
                     int assignmentCount = 0;
-                    SortedSet<Date> keys = new TreeSet<Date>(assignments.get(emailAddress).get(0).keySet());
-                    String assignmentText = "";
+                    SortedSet<Date> keys = new TreeSet<>(assignments.get(emailAddress).get(0).keySet());
+                    StringBuilder assignmentText = new StringBuilder();
                     for (Date assignmentDueDate : keys) {
-                        assignmentText += "\n\nDue on " + new SimpleDateFormat("MMMM dd, yyyy").format(assignmentDueDate) + ": ";
+                        assignmentText.append("\n\nDue on ").append(new SimpleDateFormat("MMMM dd, yyyy").format(assignmentDueDate)).append(": ");
                         for (int i = 0; i < assignments.get(emailAddress).get(0).get(assignmentDueDate).size(); i++) {
-                            assignmentText += "\n" + assignments.get(emailAddress).get(0).get(assignmentDueDate).get(i);
+                            assignmentText.append("\n").append(assignments.get(emailAddress).get(0).get(assignmentDueDate).get(i));
                             assignmentCount += 1;
                         }
                     }
@@ -126,7 +121,7 @@ public class SendEmailNotication implements RequestHandler<Object, Boolean> {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
     }
 }
