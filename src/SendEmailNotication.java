@@ -8,13 +8,15 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
-class SendEmailNotication implements RequestHandler<Object, Boolean> {
+public class SendEmailNotication implements RequestHandler<Object, Boolean> {
     @Override
     public Boolean handleRequest(Object input, Context context) {
         try {
             sendUpcomingAssignmentNotifications();
             return true;
         } catch (Exception ex) {
+            System.out.println("Failed");
+            System.out.println(ex);
             ex.printStackTrace();
         }
 
@@ -25,11 +27,12 @@ class SendEmailNotication implements RequestHandler<Object, Boolean> {
         try {
             sendUpcomingAssignmentNotifications();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.out.println("Failed");
+            System.out.println(ex);
         }
     }
 
-    private static Map<String, ArrayList<Map<Date, ArrayList<String>>>> getUpcomingAssignments() throws Exception {
+    public static Map<String, ArrayList<Map<Date, ArrayList<String>>>> getUpcomingAssignments() throws Exception {
         Map<String, ArrayList<Map<Date, ArrayList<String>>>> emailNotifications = new HashMap<>();
 
         try (Connection dbCon = new DatabaseConnection().getConnection()) {
@@ -72,7 +75,7 @@ class SendEmailNotication implements RequestHandler<Object, Boolean> {
     }
 
     // Send an email notification for any assignments due in three days or less
-    private static void sendUpcomingAssignmentNotifications() {
+    public static void sendUpcomingAssignmentNotifications() {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");
